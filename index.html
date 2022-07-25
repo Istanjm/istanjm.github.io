@@ -1,40 +1,64 @@
 <html>
-<head>
- <meta charset="utf-8">
- <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
- <title>ArcGIS API MAP</title>
- <style>
-   html, body, #viewDiv {
-     padding: 0;
-     margin: 0;
-     height: 100%;
-     width: 100%;
-   }
- </style>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Sketch widget | Sample | ArcGIS API for JavaScript 4.24</title>
 
- <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css">
- <script src="https://js.arcgis.com/4.16/"></script>
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.24/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.24/"></script>
 
- <script>
-   require([
-   //这里列出所有要用的模块目录，记得中间用逗号隔开
-   "esri/Map",
-   "esri/views/MapView"
-   ], function(Map, MapView) {
-    var map = new Map({
-       basemap: "topo-vector"
-     });
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script>
+      require([
+        "esri/widgets/Sketch",
+        "esri/Map",
+        "esri/layers/GraphicsLayer",
+        "esri/views/MapView"
+      ], (Sketch, Map, GraphicsLayer, MapView) => {
+        const graphicsLayer = new GraphicsLayer();
 
-     var view = new MapView({
-       container: "viewDiv",
-       map: map,
-       center: [118.8,39.6],
-       zoom: 11
-     });
-   });
- </script>
-</head>
-<body>
- <div id="viewDiv"></div>
-</body>
+        const map = new Map({
+          basemap: "topo-vector",
+          layers: [graphicsLayer]
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 5,
+          center: [90, 45]
+        });
+
+        view.when(() => {
+          const sketch = new Sketch({
+            layer: graphicsLayer,
+            view: view,
+            // graphic will be selected as soon as it is created
+            creationMode: "update"
+          });
+
+          view.ui.add(sketch, "top-right");
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
 </html>
